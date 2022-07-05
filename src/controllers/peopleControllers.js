@@ -1,4 +1,5 @@
 const httpStatus = require('../helpers/httpStatus')
+const bcrypt = require('bcrypt');
 
 const peopleControllers = (People) => {
 
@@ -50,6 +51,9 @@ const peopleControllers = (People) => {
     const putPeopleById = async (req, res, next) => {
         try{
             const { params, body } = req;
+
+            const encryptedPassword = await bcrypt.hash(body.password, 10)
+
             await People.findByIdAndUpdate(
                 
                   params.id,
@@ -57,7 +61,7 @@ const peopleControllers = (People) => {
                       firstName: body.firstName,
                       lastName: body.lastName,
                       nickName: body.nickName,
-                      password: body.password,
+                      password: encryptedPassword,
                       cellPhone: body.cellPhone,
                       country: body.country,
                       datePeople: body.datePeople,
